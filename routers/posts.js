@@ -1,58 +1,40 @@
-const express = require('express')
-const router = express.Router();
-const blogsData = require('../data/blog.js')
+const express = require("express")
+const postsController = require("../controllers/postsController.js")
 
 // Middleware
 
-const validatId = require('../middleware/validatId.js');
+const validatId = require("../middleware/validatId.js");
+const router = express.Router();
+
+
+
 
 router.use('/:id' , validatId)
 
 
 // INDEX
 
-router.get('/', (req, res) => {
-    res.json(blogsData)
-})
+router.get('/', postsController.index)
 
 // SHOW
 
-router.get('/:id', (req, res) => {
-
-  
-
-    const blog = blogsData.find((elm) => elm.id == req.params.id)
-
-    if(blog) {
-        res.json(blog)
-    } else {
-        res.sendStatus(404)
-    }
-})
+router.get('/:id', postsController.show)
 
 // STORE
 
-router.post('/', (req, res) => {
-    res.send('Crea un nuovo elemento')
-})
+router.post('/', postsController.store)
 
 // UPDATE
 
-router.put('/:id', (req, res) => {
-    res.send(`modifica interamente il post ${req.params.id}`)
-})
+router.put('/:id', postsController.update)
 
 // MODIFY 
 
-router.patch('/:id', (req, res) => {
-    res.send(`modifica parzialmente il post ${req.params.id}`)
-})
+router.patch('/:id', postsController.modify)
 
 
 // DELETE
 
-router.delete('/:id', (req, res) => {
-    res.send(`Cancellazione del post ${req.params.id}`)
-})
+router.delete('/:id', postsController.destroy)
 
 module.exports = router;
