@@ -37,34 +37,70 @@ const show = (req, res)  => {
 // STORE
 
 const store = (req, res) => {
+    
+        const newId = blogsData[blogsData.length - 1].id +1;
+        const newBlog = {
+            id: newId,
+            name: req.body.name,
+            contenuto:  req.body.contenuto,
+            immagine: req.body.immagine,
+            tags: req.body.tags,
+        }
 
-    blogsData.push()
-    res.send('Crea un nuovo elemento')
+        blogsData.push(newBlog)
+       res.status(201).json(newBlog)
 }
 
 // UPDATE
 
 const update = (req, res) => {
-    res.send(`modifica interamente il post ${req.params.id}`)
-}
+    const blog = blogsData.find((elm) => elm.id == req.params.id)
+
+    if(!blog) {
+     return   res.sendStatus(404).json({
+        error: "Blog not found"
+        });
+    }
+    
+        blog.name = req.body.name;      
+        blog.contenuto = req.body.contenuto;
+        blog.immagine = req.body.immagine;
+        blog.tags = req.body.tags;
+
+        res.json(blog)
+    
+};
 
 // MODIFY 
 
 const modify = (req, res) => {
-    res.send(`modifica parzialmente il post ${req.params.id}`)
+    let blog = blogsData.find((elm) => elm.id == req.params.id)
+
+    if(!blog) {
+     return   res.sendStatus(404).json({
+        error: "Blog not found"
+        });
+    }
+
+    blog = {
+        ...blog,
+        ...req.body
+    }
+
+    res.json(blog)
 }
 
 // DELETE
 
 const destroy = (req, res) => {
-    const blogControll = blogsData.find((elm) => elm.id == req.params.id)
+    const blogDelete = blogsData.find((elm) => elm.id == req.params.id)
 
-    if (!blogControll) {
+    if (!blogDelete) {
         return res.status(404).json({
             error: "Blog not found"
         });
     }
-    blogsData.splice(blogsData.indexOf(blogControll), 1)
+    blogsData.splice(blogsData.indexOf(blogDelete), 1)
     console.log(blogsData)
     res.sendStatus(204)
 }

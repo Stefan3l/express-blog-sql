@@ -4,6 +4,7 @@ const port = 3001
 const blogRouter = require('./routers/posts.js')
 
 app.use(express.static('public'))
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
