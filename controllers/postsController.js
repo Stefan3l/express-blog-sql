@@ -3,6 +3,8 @@ const blogsData = require('../data/blog.js')
 // INDEX
 
 const index = (req, res) => {
+    // test error
+    // throw new Error ('prova error')
     
     const tag = req.query.tags; 
 
