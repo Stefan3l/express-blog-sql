@@ -82,10 +82,11 @@ const modify = (req, res) => {
         });
     }
 
-    blog = {
-        ...blog,
-        ...req.body
-    }
+    blog.name = req.body.name || blog.name
+    blog.contenuto = req.body.contenuto || blog.contenuto
+    blog.immagine = req.body.immagine || blog.immagine
+    blog.tags = req.body.tags || blog.tags
+      
 
     res.json(blog)
 }
