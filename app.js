@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.use('/posts', blogRouter)
 
-//Middleware che gestisci gli errori
+//Middleware che gestisci gli errori di server 500
 app.use(errorsHandler)
 
 //Middleware che gestisce l'errore 404
