@@ -7,42 +7,28 @@ const blogsData = require("../data/blog.js");
 // INDEX
 
 const index = (req, res) => {
-  // test error
-  // throw new Error ('prova error')
-
   const sql = `SELECT * FROM posts`;
 
   connection.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
     res.json(results);
   });
-
-  //   const tag = req.query.tags;
-
-  //   if (!tag) {
-  //     return res.json(blogsData);
-  //   }
-  //   const blogTag = blogsData.filter((elm) => elm.tags.includes(tag));
-
-  //   if (blogTag.length === 0) {
-  //     return res.status(404).json({
-  //       error: "Blog not found",
-  //     });
-  //   } else {
-  //     res.json(blogTag);
-  //   }
 };
 
 // SHOW
 
 const show = (req, res) => {
-  const blog = blogsData.find((elm) => elm.id == req.params.id);
+  const sql = `SELECT *
+    FROM posts
+    WHERE id = ?`;
 
-  if (blog) {
-    res.json(blog);
-  } else {
-    res.sendStatus(404);
-  }
+  const id = req.params.id;
+
+  connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+
+    res.json(results);
+  });
 };
 
 // STORE
@@ -102,16 +88,16 @@ const modify = (req, res) => {
 // DELETE
 
 const destroy = (req, res) => {
-  const blogDelete = blogsData.find((elm) => elm.id == req.params.id);
+  const sql = `DELETE
+    FROM posts
+    WHERE id = ?`;
 
-  if (!blogDelete) {
-    return res.status(404).json({
-      error: "Blog not found",
-    });
-  }
-  blogsData.splice(blogsData.indexOf(blogDelete), 1);
-  console.log(blogsData);
-  res.sendStatus(204);
+  const id = req.params.id;
+
+  connection.query(sql, [id], (err) => {
+    if (err) return res.status(500).json({ error: "Database query failed" });
+    res.sendStatus(204);
+  });
 };
 
 module.exports = { index, show, store, update, modify, destroy };
