@@ -18,16 +18,33 @@ const index = (req, res) => {
 // SHOW
 
 const show = (req, res) => {
-  const sql = `SELECT *
-    FROM posts
-    WHERE id = ?`;
+  const blogSql = `SELECT *
+        FROM posts
+        WHERE id = ?`;
+
+  const tagsSql = ` SELECT  tags.label
+        FROM tags
+        JOIN post_tag ON post_tag.tag_id = tags.id
+        JOIN posts ON post_tag.post_id = posts.id
+        WHERE post_tag.post_id = ?`;
 
   const id = req.params.id;
 
-  connection.query(sql, [id], (err, results) => {
+  connection.query(blogSql, [id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
 
-    res.json(results);
+    const blog = results[0];
+
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    connection.query(tagsSql, [id], (err, results) => {
+      if (err) return res.status(500).json({ error: "Database query failed" });
+      console.log(results);
+      blog.tags = results;
+      res.json(blog);
+    });
   });
 };
 
